@@ -19,6 +19,8 @@ public:
 
 
 private:
+	void recover_from_sleep(uint scb_orig, uint clock0_orig, uint clock1_orig);
+
 
 	 uint scb_orig;
 	 uint clock0_orig;

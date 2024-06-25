@@ -477,12 +477,12 @@ void DS3231::set_delay(uint sleep_mins)
 void DS3231::write_bytes(uint8_t reg, uint8_t *buf, int len) {
     uint8_t buffer[len + 1];
 
-    printf("Write %X, ", reg);
+   //printf("Write %X, ", reg);
     buffer[0] = reg;
     for(int x = 0; x < len; x++) {
       buffer[x + 1] = buf[x];
-      printf("%X, ",  buffer[x + 1]);
+      //printf("%X, ",  buffer[x + 1]);
     }
-    printf("\n");
+    //printf("\n");
     i2c_write_blocking(_i2c,DS3231_ADDR, buffer, len + 1, false);
 };

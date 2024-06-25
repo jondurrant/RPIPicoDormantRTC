@@ -6,6 +6,7 @@ set(CMAKE_CXX_COMPILER_WORKS 1 CACHE INTERNAL "")
 set(NAME Simple) # <-- Name your project/executable here!
 
 include(pico_sdk_import.cmake)
+include(pico_extras_import.cmake)
 
 # Gooey boilerplate
 project(${NAME} C CXX ASM)
@@ -15,7 +16,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Initialize the SDK
 pico_sdk_init()
 
-include(pico_extras_import.cmake)
+
 
 
 add_subdirectory(src)

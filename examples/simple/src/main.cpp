@@ -51,6 +51,8 @@ int main() {
     Dormant dormant;
 
     rtc.set_delay(1);
+    printf("SLEEP\n");
+    uart_default_tx_wait_blocking();
     dormant.sleep(WAKE_PAD);
 
     while (true) { // Loop forever
@@ -65,8 +67,10 @@ int main() {
     		resurrect++;
     		printf("RESSURECT %u\n", resurrect);
 
-    		flash(20);
+    		flash(5);
     		 rtc.set_delay(1);
+			printf("SLEEP\n");
+			uart_default_tx_wait_blocking();
     		dormant.sleep(WAKE_PAD);
     	}
 
