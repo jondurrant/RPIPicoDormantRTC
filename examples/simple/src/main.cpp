@@ -59,14 +59,6 @@ int main() {
 
     while (true) { // Loop forever
 
-
-    	//Print GPIO of Wake Pin
-    	uint8_t pad = gpio_get(WAKE_PAD);
-    	printf("Pad %u at Time: %s\n",
-    			pad,
-    			rtc.get_time_str());
-    	if (pad == 0){
-
     		resurrect++;
     		printf("RESSURECT %u\n", resurrect);
 
@@ -77,9 +69,8 @@ int main() {
 			uart_default_tx_wait_blocking();
     		dormant.sleep(1, WAKE_PAD);
 
-    	}
 
-    	sleep_ms(DELAY);
+    		sleep_ms(DELAY);
 
     }
 

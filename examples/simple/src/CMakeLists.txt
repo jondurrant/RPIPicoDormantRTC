@@ -1,17 +1,13 @@
 add_executable(${NAME}
         main.cpp
-        ../../../src/DS3231.cpp
-        ../../../src/Dormant.cpp
+        #../../../src/DS3231.cpp
+        #../../../src/Dormant.cpp
         )
 
 # Pull in our pico_stdlib which pulls in commonly used features
 target_link_libraries(${NAME} 
     pico_stdlib
-    hardware_i2c
-    hardware_rtc
-    hardware_clocks
-	hardware_rosc
-	hardware_sleep
+    dormant
     )
 
 target_include_directories(${NAME} PRIVATE 
