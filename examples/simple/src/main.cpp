@@ -64,6 +64,7 @@ int main() {
     			pad,
     			rtc.get_time_str());
     	if (pad == 0){
+    		rtc.clearAlarm();
     		resurrect++;
     		printf("RESSURECT %u\n", resurrect);
 
@@ -72,6 +73,7 @@ int main() {
 			printf("SLEEP\n");
 			uart_default_tx_wait_blocking();
     		dormant.sleep(WAKE_PAD);
+
     	}
 
     	sleep_ms(DELAY);

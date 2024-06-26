@@ -47,6 +47,8 @@ private:
     void				init(i2c_inst_t *i2c, uint8_t sdaPin, uint8_t sclPin);
 
     void 				write_bytes(uint8_t reg, uint8_t *buf, int len);
+    uint8_t 			getAddr(const uint8_t addr);
+    void 				setAddr(const uint8_t addr, const uint8_t val);
 
 public:
     DS3231();
@@ -77,6 +79,7 @@ public:
     void                set_date(uint8_t day, uint8_t mon, int year);
 
     void 				set_delay(uint sleep_mins);
+    void 				clearAlarm(void);
 };
 
 #endif /* ___DS3231_HPP__ */

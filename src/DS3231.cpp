@@ -50,6 +50,15 @@
 #define DS3231_CONTROL_BBSQW    0x40	/* Battery-Backed Square-Wave Enable */
 #define DS3231_CONTROL_EOSC	    0x80	/* not Enable Oscillator, 0 equal on */
 
+// status register bits
+#define DS3231_STATUS_A1F      0x01		/* Alarm 1 Flag */
+#define DS3231_STATUS_A2F      0x02		/* Alarm 2 Flag */
+#define DS3231_STATUS_BUSY     0x04		/* device is busy executing TCXO */
+#define DS3231_STATUS_EN32KHZ  0x08		/* Enable 32KHz Output  */
+#define DS3231_STATUS_OSF      0x80		/* Oscillator Stop Flag */
+
+
+
 /*
  * Read macros
  */
@@ -473,6 +482,28 @@ void DS3231::set_delay(uint sleep_mins)
 	 write_bytes(reg, send_t, 1);
 
 }
+
+void DS3231::clearAlarm(void){
+    uint8_t reg_val;
+
+    reg_val = getAddr(DS3231_STATUS_ADDR) & ~DS3231_STATUS_A2F;
+    setAddr(DS3231_STATUS_ADDR,  reg_val);
+}
+
+uint8_t DS3231::getAddr(const uint8_t addr){
+    uint8_t rv;
+
+    i2c_write_blocking(_i2c, DS3231_ADDR, &addr, 1, true);
+
+    i2c_read_blocking(_i2c, DS3231_ADDR, &rv, 1, false);
+
+    return rv;
+}
+
+void DS3231::setAddr(const uint8_t addr, const uint8_t val){
+    write_bytes(addr, (uint8_t*) &val, 1);
+}
+
 
 void DS3231::write_bytes(uint8_t reg, uint8_t *buf, int len) {
     uint8_t buffer[len + 1];
