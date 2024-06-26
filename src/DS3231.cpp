@@ -2,6 +2,7 @@
  * RP2040 driver for DS3231 RTC module.
  *
  * Adapter from work by Victor Gabriel Costin.
+ * With ideas from   :  Petre Rodan  Ardino Library:  https://github.com/rodan/ds3231
  * Jon Durrant
  * Licensed under the MIT license.
  */
@@ -483,14 +484,14 @@ void DS3231::set_delay(uint sleep_mins)
 
 }
 
-void DS3231::clearAlarm(void){
+void DS3231::clear_alarm(void){
     uint8_t reg_val;
 
-    reg_val = getAddr(DS3231_STATUS_ADDR) & ~DS3231_STATUS_A2F;
-    setAddr(DS3231_STATUS_ADDR,  reg_val);
+    reg_val = get_addr(DS3231_STATUS_ADDR) & ~DS3231_STATUS_A2F;
+    set_addr(DS3231_STATUS_ADDR,  reg_val);
 }
 
-uint8_t DS3231::getAddr(const uint8_t addr){
+uint8_t DS3231::get_addr(const uint8_t addr){
     uint8_t rv;
 
     i2c_write_blocking(_i2c, DS3231_ADDR, &addr, 1, true);
@@ -500,7 +501,7 @@ uint8_t DS3231::getAddr(const uint8_t addr){
     return rv;
 }
 
-void DS3231::setAddr(const uint8_t addr, const uint8_t val){
+void DS3231::set_addr(const uint8_t addr, const uint8_t val){
     write_bytes(addr, (uint8_t*) &val, 1);
 }
 

@@ -1,5 +1,9 @@
 /**
- * Simple Hibernate and Recovery
+ * Simple Hibernate and Recovery on a Raspberry PI Pico
+ * LED is flashed on GPIO 2 while a wake
+ *
+ * RTC DS3231 connected on I2C to GP12 & 13
+ * RTC SQW used for interupt to wake on GP10
  */
 
 #include "pico/stdlib.h"
@@ -35,44 +39,43 @@ int main() {
     sleep_ms(2000);
     printf("GO\n");
 
+    //Setup LED
     const uint LED_PIN = LED_PAD;
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
 
-    gpio_init(WAKE_PAD);
-    gpio_pull_up(WAKE_PAD);
-    gpio_set_dir(WAKE_PAD, GPIO_IN);
-
+    //Set up RTC and get time
     DS3231 rtc(i2c0,  SDA_PAD,  SCL_PAD);
     printf("RTC: %s\n", rtc.get_time_str());
 
+
     flash(20);
 
-    Dormant dormant;
-
-    rtc.set_delay(1);
+    //Drop into initial sleep for 1 minute
+    Dormant dormant(&rtc);
     printf("SLEEP\n");
     uart_default_tx_wait_blocking();
-    dormant.sleep(WAKE_PAD);
+    dormant.sleep(1, WAKE_PAD);
 
     while (true) { // Loop forever
 
 
-
+    	//Print GPIO of Wake Pin
     	uint8_t pad = gpio_get(WAKE_PAD);
     	printf("Pad %u at Time: %s\n",
     			pad,
     			rtc.get_time_str());
     	if (pad == 0){
-    		rtc.clearAlarm();
+
     		resurrect++;
     		printf("RESSURECT %u\n", resurrect);
 
     		flash(5);
-    		 rtc.set_delay(1);
+
+    		//Sleep again
 			printf("SLEEP\n");
 			uart_default_tx_wait_blocking();
-    		dormant.sleep(WAKE_PAD);
+    		dormant.sleep(1, WAKE_PAD);
 
     	}
 
