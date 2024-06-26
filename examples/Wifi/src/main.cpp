@@ -80,10 +80,11 @@ int main() {
 
     //Drop into initial sleep for 1 minute
     WifiHelper::deInit();
-    Dormant dormant(&rtc);
+    Dormant *dormant = Dormant::singleton();
+    dormant->setRTC(&rtc);
     printf("SLEEP\n");
     uart_default_tx_wait_blocking();
-    dormant.sleep(1, WAKE_PAD);
+    dormant->sleep(1, WAKE_PAD);
 
 
     while (true) { // Loop forever
@@ -102,7 +103,7 @@ int main() {
 		printf("SLEEP\n");
 		uart_default_tx_wait_blocking();
 		WifiHelper::deInit();
-		dormant.sleep(1, WAKE_PAD);
+		dormant->sleep(1, WAKE_PAD);
 
     	sleep_ms(DELAY);
 

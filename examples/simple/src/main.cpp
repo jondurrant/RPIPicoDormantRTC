@@ -52,10 +52,11 @@ int main() {
     flash(20);
 
     //Drop into initial sleep for 1 minute
-    Dormant dormant(&rtc);
+    Dormant* dormant = Dormant::singleton();
+    dormant->setRTC(&rtc);
     printf("SLEEP\n");
     uart_default_tx_wait_blocking();
-    dormant.sleep(1, WAKE_PAD);
+    dormant->sleep(1, WAKE_PAD);
 
     while (true) { // Loop forever
 
@@ -67,7 +68,7 @@ int main() {
     		//Sleep again
 			printf("SLEEP\n");
 			uart_default_tx_wait_blocking();
-    		dormant.sleep(1, WAKE_PAD);
+    		dormant->sleep(1, WAKE_PAD);
 
 
     		sleep_ms(DELAY);

@@ -14,17 +14,21 @@
 
 #include "pico/stdlib.h"
 #include "DS3231.hpp"
+#include "DormantNotification.h"
+#include <list>
+
 
 class Dormant {
 public:
-	Dormant();
+
+
 
 	/***
-	 * Constructor with RTC
+	 * Set the RTC
 	 * If no RTC will just ignore RTC comms
 	 * @param rtc - pointer to the RTC object. Can be NULL
 	 */
-	Dormant(DS3231 *rtc);
+	void setRTC(DS3231 *rtc);
 
 	/***
 	 * Sleep until pad pulled to ground
@@ -43,8 +47,30 @@ public:
 
 	virtual ~Dormant();
 
+	/***
+	 * Get the Dormant control object
+	 * @return Dormant object
+	 */
+	static Dormant * singleton();
+
+	void addObserver(DormantNotification *obs);
+	void delObserver(DormantNotification *obs);
+
+
+
 
 private:
+	static Dormant * pSingleton ;
+
+	Dormant();
+
+	/***
+	 * Constructor with RTC
+	 * If no RTC will just ignore RTC comms
+	 * @param rtc - pointer to the RTC object. Can be NULL
+	 */
+	Dormant(DS3231 *rtc);
+
 	/***
 	 * Reset the clocks
 	 * @param scb_orig
@@ -57,6 +83,15 @@ private:
 	 * Store the clocks
 	 */
 	void storeClocks();
+
+	/***
+	 * Notify observers of going dormant
+	 * @param minutes
+	 * €
+	 */
+	void notifyObservers(uint minutes, bool wake=false);
+
+	std::list<DormantNotification *> xObservers;
 
 	DS3231 *pRTC = NULL;
 	 uint scb_orig;

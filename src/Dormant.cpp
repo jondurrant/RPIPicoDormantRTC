@@ -23,6 +23,10 @@ Dormant::Dormant(DS3231 *rtc) {
 	storeClocks();
 }
 
+void Dormant::setRTC(DS3231 *rtc){
+	pRTC = rtc;
+}
+
 void Dormant::storeClocks(){
 	  scb_orig = scb_hw->scr;
 	  clock0_orig = clocks_hw->sleep_en0;
@@ -47,6 +51,7 @@ void Dormant::sleep(uint8_t wakePad){
 }
 
 void Dormant::sleep(uint minutes, uint8_t wakePad){
+	notifyObservers(minutes, false);
 	if (pRTC != NULL){
 		pRTC->clear_alarm();
 		pRTC->set_delay(minutes);
@@ -55,6 +60,7 @@ void Dormant::sleep(uint minutes, uint8_t wakePad){
 	if (pRTC != NULL){
 		pRTC->clear_alarm();
 	}
+	notifyObservers(minutes, true);
 }
 
 void Dormant::recover_from_sleep(uint scb_orig, uint clock0_orig, uint clock1_orig){
@@ -73,3 +79,33 @@ void Dormant::recover_from_sleep(uint scb_orig, uint clock0_orig, uint clock1_or
 
     return;
 }
+
+
+Dormant * Dormant::pSingleton  = NULL;
+Dormant * Dormant::singleton(){
+	if (pSingleton == NULL){
+		pSingleton = new Dormant;
+	}
+	return pSingleton;
+}
+
+void Dormant::addObserver(DormantNotification *obs){
+	xObservers.push_back(obs);
+}
+
+void Dormant::delObserver(DormantNotification *obs){
+	xObservers.remove(obs);
+}
+
+void Dormant::notifyObservers(uint minutes, bool wake){
+	for (auto itr = xObservers.begin();
+	        itr != xObservers.end(); itr++) {
+			if (!wake) {
+				(*itr)->notifyDormant(minutes);
+			} else {
+				(*itr)->notifyWake(minutes);
+			}
+	    }
+}
+
+
