@@ -30,21 +30,20 @@ void DeepSleep::setRTC(DS3231 *rtc){
 	pRTC = rtc;
 }
 
-void gpio_callback(uint gpio, uint32_t events) {
-
+void DeepSleep::gpio_callback(uint gpio, uint32_t events) {
+	;//NOP
 }
 
 void DeepSleep::sleep(uint8_t wakePad){
 	gpio_init(wakePad);
 	gpio_pull_up(wakePad);
 	gpio_set_dir(wakePad, GPIO_IN);
-	//gpio_set_irq_enabled_with_callback (
-	gpio_set_irq_enabled(
+	gpio_set_irq_enabled_with_callback (
 			wakePad,
 		   GPIO_IRQ_EDGE_FALL |
 		   GPIO_IRQ_EDGE_RISE,
-		   true
-		   //&gpio_callback
+		   true,
+		   DeepSleep::gpio_callback
 		   );
 
 	sleep_run_from_xosc();

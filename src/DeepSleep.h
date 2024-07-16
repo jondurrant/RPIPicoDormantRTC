@@ -53,6 +53,7 @@ private:
 	DeepSleep();
 
 	static void rtcCB(void);
+	static void gpio_callback(uint gpio, uint32_t events);
 
 	/***
 	 * Reset the clocks
