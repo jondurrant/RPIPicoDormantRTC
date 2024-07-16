@@ -8,6 +8,7 @@ add_library(dormant STATIC)
 target_sources(dormant PUBLIC
     ${DORMANT_DIR}/src/DS3231.cpp
     ${DORMANT_DIR}/src/Dormant.cpp
+    ${DORMANT_DIR}/src/DeepSleep.cpp
     ${DORMANT_DIR}/src/DormantNotification.cpp
 )
 
