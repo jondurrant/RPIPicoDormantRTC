@@ -140,6 +140,8 @@ private:
 	static void rtcCB(void);
 	static void gpio_callback(uint gpio, uint32_t events);
 
+	void recover();
+
 	/***
 	 * Reset the clocks
 	 * @param scb_orig

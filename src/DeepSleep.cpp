@@ -31,7 +31,7 @@ void DeepSleep::setRTC(DS3231 *rtc){
 }
 
 void DeepSleep::gpio_callback(uint gpio, uint32_t events) {
-	;//NOP
+	DeepSleep::singleton()->recover();
 }
 
 void DeepSleep::sleep(uint8_t wakePad){
@@ -73,7 +73,14 @@ void DeepSleep::sleep(uint8_t wakePad){
 }
 
 void DeepSleep::rtcCB(void) {
+	//gpio_put(5, true);
+
+	DeepSleep::singleton()->recover();
 	; //NOP
+}
+
+void DeepSleep::recover(){
+	recover_from_sleep(scb_orig, clock0_orig, clock1_orig);
 }
 
 
@@ -115,8 +122,8 @@ void DeepSleep::sleep(uint minutes, uint8_t wakePad){
 		t.dotw = -1;
 		t.min = (t.min + minutes) %60;
 		/*Debug
-		//t.min = -1;
-		//t.sec = (t.sec + 10) % 60;
+		t.min = -1;
+		t.sec = (t.sec + 10) % 60;
 		printf("Sleep %u min until %d-%d-%d (%d) %d:%d:%d \n", minutes,
 				t.year,
 				t.month,
@@ -162,8 +169,7 @@ void DeepSleep::sleep_until_interupt( ) {
 	if (pRTC == NULL){
 		clocks_hw->sleep_en0 =
 				xClocks |
-				CLOCKS_SLEEP_EN0_CLK_RTC_RTC_BITS
-				| CLOCKS_SLEEP_EN0_CLK_SYS_PWM_BITS;
+				CLOCKS_SLEEP_EN0_CLK_RTC_RTC_BITS;
 	} else {
 		clocks_hw->sleep_en0 = xClocks;
 	}

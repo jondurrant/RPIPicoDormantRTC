@@ -45,6 +45,7 @@ int main() {
 
         printf("SLEEP\n");
         uart_default_tx_wait_blocking();
+
         deepSleep->sleepMin(1);
 
 		resurrect++;
