@@ -169,12 +169,12 @@ private:
 
 	std::list<DormantNotification *> xObservers;
 
-	bool xOwnGPIOCallbacks = true;
+    volatile bool xOwnGPIOCallbacks = true;
 	DS3231 *pRTC = NULL;
-	 uint scb_orig;
-	 uint clock0_orig;
-	 uint clock1_orig;
-	 io_rw_32 xClocks = 0;
+	volatile uint scb_orig;
+	volatile uint clock0_orig;
+	volatile uint clock1_orig;
+	volatile io_rw_32 xClocks = 0;
 };
 
 #endif /* SRC_DEEPSLEEP_H_ */

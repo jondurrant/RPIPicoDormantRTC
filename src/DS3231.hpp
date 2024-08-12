@@ -31,6 +31,9 @@ private:
     char                _date_str_buffer[11];
 
     i2c_inst_t *		_i2c;
+    uint8_t				_sdaGP =0xFF;
+    uint8_t				_sclGP =0xFF;
+    uint8_t				_pwrGP =0xFF;
 
     void                _read_data_reg(uint8_t reg, uint8_t n_regs);
     void                _write_data_reg(uint8_t reg, uint8_t n_regs);
@@ -80,6 +83,9 @@ public:
 
     void 				set_delay(uint sleep_mins);
     void 				clear_alarm(void);
+    void				set_power_gp(uint8_t gp);
+    void				on();
+    void				off();
 };
 
 #endif /* ___DS3231_HPP__ */

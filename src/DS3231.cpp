@@ -133,6 +133,8 @@ void DS3231::init(i2c_inst_t *i2c, uint8_t sdaPin, uint8_t sclPin){
     gpio_set_function(sclPin, GPIO_FUNC_I2C);
     gpio_pull_up(sdaPin);
     gpio_pull_up(sclPin);
+    _sdaGP = sdaPin;
+    _sclGP = sdaPin;
 }
 
 void DS3231::_read_data_reg(uint8_t reg, uint8_t n_regs)
@@ -518,3 +520,36 @@ void DS3231::write_bytes(uint8_t reg, uint8_t *buf, int len) {
     //printf("\n");
     i2c_write_blocking(_i2c,DS3231_ADDR, buffer, len + 1, false);
 };
+
+void DS3231::set_power_gp(uint8_t gp){
+	 _pwrGP = _pwrGP;
+	 gpio_init(_pwrGP);
+	 gpio_set_dir(_pwrGP, GPIO_OUT);
+	 gpio_put(_pwrGP, true);
+}
+
+
+void	DS3231::on(){
+	if (_pwrGP <= 28){
+		gpio_put(_pwrGP, true);
+	}
+	if (_sdaGP <= 28){
+		gpio_pull_up(_sdaGP);
+	}
+	if (_sclGP <= 28){
+		gpio_pull_up(_sclGP);
+	}
+}
+
+void	DS3231::off(){
+	if (_pwrGP <= 28){
+		//gpio_put(_pwrGP, false);
+	}
+	if (_sdaGP <= 28){
+		gpio_disable_pulls(_sdaGP);
+	}
+	if (_sclGP <= 28){
+		gpio_disable_pulls(_sclGP);
+	}
+}
+

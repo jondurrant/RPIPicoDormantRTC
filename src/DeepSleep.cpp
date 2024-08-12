@@ -60,7 +60,10 @@ void DeepSleep::sleep(uint8_t wakePad){
 
 	sleep_run_from_xosc();
 	sleep_until_interupt();
-	recover_from_sleep(scb_orig, clock0_orig, clock1_orig);
+
+	if (pRTC != NULL){
+		recover_from_sleep(scb_orig, clock0_orig, clock1_orig);
+	}
 
 	if (wakePad <= 28){
 		gpio_set_irq_enabled(
@@ -70,6 +73,7 @@ void DeepSleep::sleep(uint8_t wakePad){
 			   false);
 		gpio_disable_pulls(wakePad);
 	}
+
 }
 
 void DeepSleep::rtcCB(void) {
@@ -89,6 +93,7 @@ void DeepSleep::sleep(uint minutes, uint8_t wakePad){
 	if (pRTC != NULL){
 		pRTC->clear_alarm();
 		pRTC->set_delay(minutes);
+		pRTC->off();
 	} else {
 		if (!rtc_running()){
 			rtc_init();
@@ -138,6 +143,7 @@ void DeepSleep::sleep(uint minutes, uint8_t wakePad){
 	}
 	sleep(wakePad);
 	if (pRTC != NULL){
+		pRTC->on();
 		pRTC->clear_alarm();
 	}
 	notifyObservers(minutes, true);
@@ -151,6 +157,7 @@ void DeepSleep::recover_from_sleep(uint scb_orig, uint clock0_orig, uint clock1_
 
     //Re-enable ring Oscillator control
     rosc_write(&rosc_hw->ctrl, ROSC_CTRL_ENABLE_LSB);
+    //gpio_put(8, true); //DEBUG
 
     //reset procs back to default
     scb_hw->scr = scb_orig;
@@ -159,9 +166,9 @@ void DeepSleep::recover_from_sleep(uint scb_orig, uint clock0_orig, uint clock1_
 
     //reset clocks
     clocks_init();
-    stdio_init_all();
+   stdio_init_all();
 
-    return;
+   return;
 }
 
 void DeepSleep::sleep_until_interupt( ) {
