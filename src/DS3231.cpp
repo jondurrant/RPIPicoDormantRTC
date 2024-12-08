@@ -460,10 +460,16 @@ void DS3231::set_delay(uint sleep_mins)
     write_bytes(reg, send_t, 1);
 
 
-	wakeup_min = (get_min() / sleep_mins + 1) * sleep_mins;
+	//wakeup_min = (get_min() / sleep_mins + 1) * sleep_mins;
+    wakeup_min = get_min() + sleep_mins ;
 	if (wakeup_min > 59) {
-		wakeup_min -= 60;
+		//wakeup_min -= 60;
+		wakeup_min = wakeup_min % 60;
 	}
+
+	//DEBUG
+	printf("RTC %d Wake %d\n", get_min(), wakeup_min);
+	uart_default_tx_wait_blocking();
 
 
 	 uint8_t t[3] = { wakeup_min, 0,  0 };
@@ -543,7 +549,7 @@ void	DS3231::on(){
 
 void	DS3231::off(){
 	if (_pwrGP <= 28){
-		//gpio_put(_pwrGP, false);
+		gpio_put(_pwrGP, false);
 	}
 	if (_sdaGP <= 28){
 		gpio_disable_pulls(_sdaGP);

@@ -15,6 +15,7 @@
 #include "hardware/sync.h"
 #include "hardware/rtc.h"
 #include "pico/util/datetime.h"
+#include "pico/runtime_init.h"
 
 
 DeepSleep::DeepSleep() {
@@ -32,6 +33,9 @@ void DeepSleep::setRTC(DS3231 *rtc){
 
 void DeepSleep::gpio_callback(uint gpio, uint32_t events) {
 	DeepSleep::singleton()->recover();
+
+	//DEBUG
+	//printf("GPIO Triggered Wake %d\n", gpio);
 }
 
 void DeepSleep::sleep(uint8_t wakePad){
@@ -80,7 +84,8 @@ void DeepSleep::rtcCB(void) {
 	//gpio_put(5, true);
 
 	DeepSleep::singleton()->recover();
-	; //NOP
+	//DEBUG
+	//printf("Int RTC Triggered Waked\n");
 }
 
 void DeepSleep::recover(){

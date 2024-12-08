@@ -13,6 +13,7 @@
 #include "hardware/clocks.h"
 #include "hardware/rosc.h"
 #include "hardware/structs/scb.h"
+#include "pico/runtime_init.h"
 
 Dormant::Dormant() {
 	  storeClocks();
